@@ -15,6 +15,7 @@ require('intl/locale-data/jsonp/it.js');
 require('intl/locale-data/jsonp/nl.js');
 require('intl/locale-data/jsonp/ja.js');
 require('intl/locale-data/jsonp/pt.js');
+require('intl/locale-data/jsonp/ru.js');
 require('intl/locale-data/jsonp/sv.js');
 require('intl/locale-data/jsonp/th.js');
 require('intl/locale-data/jsonp/zh.js');
@@ -29,6 +30,7 @@ require('intl-messageformat/dist/locale-data/it');
 require('intl-messageformat/dist/locale-data/nl');
 require('intl-messageformat/dist/locale-data/ja');
 require('intl-messageformat/dist/locale-data/pt');
+require('intl-messageformat/dist/locale-data/ru');
 require('intl-messageformat/dist/locale-data/sv');
 require('intl-messageformat/dist/locale-data/th');
 require('intl-messageformat/dist/locale-data/zh');
@@ -55,21 +57,18 @@ export default class Localization {
 
         var localizationLanguage = window.navigator.userLanguage || window.navigator.language || 'en-us';
 
-        var localizationLanguageParts = localizationLanguage.split('-');
-        // Capitalize last part of localization for includes
-        localizationLanguageParts[localizationLanguageParts.length - 1] = (
-            localizationLanguageParts[localizationLanguageParts.length - 1].toUpperCase()
-        );
-
+        var localizationLanguageParts = localizationLanguage.toLowerCase().split('-');
         var desiredLocale = localizationLanguageParts.join('-');
-        if (desiredLocale in Object.keys(supportedLocales)) {
-            return desiredLocale;
+        for (var key in supportedLocales) {
+            if (supportedLocales[key].toLowerCase() === desiredLocale) {
+                return supportedLocales[key];
+            }
         }
 
         // We're not supporting this locale yet - do we support an ancestor?
         for (var localeKey in supportedLocales) {
             var supportedLocale = supportedLocales[localeKey];
-            var parts = supportedLocale.split('-');
+            var parts = supportedLocale.toLowerCase().split('-');
             if (parts[0] == localizationLanguageParts[0]) {
                 return supportedLocale; // Top-level is the same
             }
